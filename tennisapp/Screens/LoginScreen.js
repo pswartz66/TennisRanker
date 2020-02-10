@@ -48,21 +48,21 @@ export default class LoginScreen extends React.Component {
                 <View style={styles.LoginView}>
                     <TextInput
                         autoFocus={true}
-                        style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 50, width: 220, borderColor: 'gray', borderWidth: 1, borderRadius: '5px', fontSize: 20 }}
+                        style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 50, width: 220, borderColor: 'gray', borderWidth: 1, borderRadius: 5, fontSize: 20 }}
                         onChange={event => this.handleChange(event)}
                         value={this.state.name}
                         placeholder="Username"
                     />
                     <TextInput
                         // autoFocus={true}
-                        style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 50, width: 220, borderColor: 'gray', borderWidth: 1, borderRadius: '5px', fontSize: 20 }}
+                        style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 50, width: 220, borderColor: 'gray', borderWidth: 1, borderRadius: 5, fontSize: 20 }}
                         onChange={event => this.handleChange(event)}
                         value={this.state.name}
                         placeholder="Password"
                     />
                     <TouchableOpacity
                     // onPress={() => alert('Navigate to SignUp')}
-                    style={{ width: 220, marginTop: 30, backgroundColor: 'black', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: '5px', borderWidth: 2, borderColor: '#dcfd50'}}>
+                    style={{ width: 220, marginTop: 30, backgroundColor: 'black', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 5, borderWidth: 2, borderColor: '#dcfd50'}}>
                     <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Login</Text>
                 </TouchableOpacity>
                 </View>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from 'react-native';
 
-
 export default function HomeScreen ( { navigation }) {
 
         return (
@@ -11,19 +10,18 @@ export default function HomeScreen ( { navigation }) {
 
                     <TouchableOpacity
                         onPress={() => navigation.navigate('Login')}
-                        style={{ marginTop: 10, backgroundColor: 'gray', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: '6px' }}>
+                        style={{ marginTop: 10, backgroundColor: 'gray', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 6 }}>
                         <Text style={{ fontSize: 22, color: '#fff' }}>Login</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         // onPress={() => alert('Navigate to SignUp')}
-                        style={{ marginTop: 18, backgroundColor: 'gray', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: '6px' }}>
+                        style={{ marginTop: 18, backgroundColor: 'gray', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 6 }}>
                         <Text style={{ fontSize: 22, color: '#fff' }}>SignUp</Text>
                     </TouchableOpacity>
 
                 </ImageBackground>
             </View>
         );
-
 }
 
 const styles = StyleSheet.create({
@@ -49,6 +47,7 @@ const styles = StyleSheet.create({
         shadowColor: 'black',
         fontSize: 50,
         color: '#dcfd50',
-        marginBottom: 10,
+        // color: 'black',
+        marginBottom: 150,
     }
 });
