@@ -4,34 +4,26 @@ import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from 'react
 export default function HomeScreen ( { navigation }) {
 
         return (
-            <View style={styles.view}>
+            <View style={styles.homeView}>
                 <ImageBackground style={styles.homeBackgroundImage} source={require('../img/tennisball.jpg')}>
-                    <Text style={styles.text}>Tennis Rank</Text>
-
+                    <Text style={styles.hometext}>Tennis Rank it.</Text>
                     <TouchableOpacity
                         onPress={() => navigation.navigate('Login')}
-                        style={{ marginTop: 10, backgroundColor: 'gray', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 6 }}>
-                        <Text style={{ fontSize: 22, color: '#fff' }}>Login</Text>
+                        style={{ width: 190, marginTop: 10, backgroundColor: '#0959', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 6 }}>
+                        <Text style={{ textAlign: 'center', fontSize: 22, color: '#fff' }}>Login</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        // onPress={() => alert('Navigate to SignUp')}
-                        style={{ marginTop: 18, backgroundColor: 'gray', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 6 }}>
-                        <Text style={{ fontSize: 22, color: '#fff' }}>SignUp</Text>
+                        onPress={() => navigation.navigate('Signup')}
+                        style={{ width: 190, marginTop: 24, backgroundColor: '#059', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 6 }}>
+                        <Text style={{ textAlign: 'center', fontSize: 22, color: '#fff' }}>Sign up</Text>
                     </TouchableOpacity>
-
                 </ImageBackground>
             </View>
         );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    view: {
+    homeView: {
         flex: 3,
         alignItems: 'center',
         justifyContent: 'center'
@@ -42,12 +34,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    text: {
+    hometext: {
         fontWeight: 'bold',
         shadowColor: 'black',
         fontSize: 50,
         color: '#dcfd50',
-        // color: 'black',
         marginBottom: 150,
     }
 });
