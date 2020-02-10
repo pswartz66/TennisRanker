@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Keyboard, TouchableOpacity } from 'react-native';
-
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
 
 export default class LoginScreen extends React.Component {
     constructor(props) {
@@ -9,65 +8,46 @@ export default class LoginScreen extends React.Component {
             name: ''
         };
         this.handleChange = this.handleChange.bind(this);
-    }
-    // componentDidMount = () => {
-    //     this.keyboardDidShowListener = Keyboard.addListener(
-    //         //   'keyboardDidShow',
-    //         //   this._keyboardDidShow,
-    //     );
-    //     this.keyboardDidHideListener = Keyboard.addListener(
-    //         //   'keyboardDidHide',
-    //         //   this._keyboardDidHide,
-    //     );
-    // }
-
-    // componentWillUnmount = () => {
-    //     this.keyboardDidShowListener.remove();
-    //     this.keyboardDidHideListener.remove();
-    // }
-
+    };
 
     handleChange = (event) => {
-        // const [value, onChangeText] = React.useState('Useless Placeholder');
         const value = event.target.value;
         this.setState({
             name: value
-        })
-
-    }
+        });
+    };
 
     render() {
-
         return (
             <View style={styles.LoginView}>
                 <View style={styles.TopContainer}>
                     <Text style={styles.TopContainerText}>
-                        Log in to Start Ranking
+                        Log in to Rank it
                     </Text>
                 </View>
                 <View style={styles.LoginView}>
                     <TextInput
                         autoFocus={true}
-                        style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 50, width: 220, borderColor: 'gray', borderWidth: 1, borderRadius: 5, fontSize: 20 }}
+                        style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 50, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 20 }}
                         onChange={event => this.handleChange(event)}
                         value={this.state.name}
                         placeholder="Username"
                     />
                     <TextInput
                         // autoFocus={true}
-                        style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 50, width: 220, borderColor: 'gray', borderWidth: 1, borderRadius: 5, fontSize: 20 }}
+                        style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 50, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 20 }}
                         onChange={event => this.handleChange(event)}
                         value={this.state.name}
                         placeholder="Password"
                     />
                     <TouchableOpacity
-                    // onPress={() => alert('Navigate to SignUp')}
-                    style={{ width: 220, marginTop: 30, backgroundColor: 'black', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 5, borderWidth: 2, borderColor: '#dcfd50'}}>
-                    <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Login</Text>
-                </TouchableOpacity>
+                        // onPress={() => alert('Navigate to SignUp')}
+                        style={{ width: 220, marginTop: 30, backgroundColor: 'black', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 5, borderWidth: 2, borderColor: '#0959' }}>
+                        <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Login</Text>
+                    </TouchableOpacity>
                 </View>
-                
             </View>
+
         )
     }
 }
@@ -81,9 +61,9 @@ const styles = StyleSheet.create({
     },
     TopContainerText: {
         fontWeight: 'normal',
-        shadowColor: 'white',
-        fontSize: 30,
-        color: '#dcfd50',
+        shadowColor: '#0959',
+        fontSize: 34,
+        color: '#0959',
     },
     LoginView: {
         flex: 4,
