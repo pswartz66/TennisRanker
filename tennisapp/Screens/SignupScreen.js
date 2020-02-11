@@ -70,7 +70,7 @@ export default class SignupScreen extends React.Component {
                             keyboardType={'default'}
                             keyboardAppearance={'dark'}
                             onSubmitEditing={() => { this.secondTextInput.focus(); }}
-                            style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 50, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 20 }}
+                            style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 49, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 18 }}
                             onChange={event => this.handleChange(event)}
                             value={this.state.name}
                             placeholder="First name"
@@ -80,7 +80,7 @@ export default class SignupScreen extends React.Component {
                             keyboardAppearance={'dark'}
                             ref={(input) => { this.secondTextInput = input; }}
                             onSubmitEditing={() => { this.thirdTextInput.focus(); }}
-                            style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 50, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 20 }}
+                            style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 49, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 18 }}
                             onChange={event => this.handleChange(event)}
                             value={this.state.name}
                             placeholder="Last name"
@@ -90,7 +90,7 @@ export default class SignupScreen extends React.Component {
                             keyboardAppearance={'dark'}
                             ref={(input) => { this.thirdTextInput = input; }}
                             onSubmitEditing={() => { this.fourthTextInput.focus(); }}
-                            style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 50, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 20 }}
+                            style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 49, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 18 }}
                             onChange={event => this.handleChange(event)}
                             value={this.state.name}
                             placeholder="Username"
@@ -100,7 +100,7 @@ export default class SignupScreen extends React.Component {
                             keyboardAppearance={'dark'}
                             ref={(input) => { this.fourthTextInput = input; }}
                             onSubmitEditing={() => { this.fifthTextInput.focus(); }}
-                            style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 50, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 20 }}
+                            style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 49, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 18 }}
                             onChange={event => this.handleChange(event)}
                             value={this.state.name}
                             placeholder="Password"
@@ -110,7 +110,7 @@ export default class SignupScreen extends React.Component {
                             keyboardAppearance={'dark'}
                             ref={(input) => { this.fifthTextInput = input; }}
                             onSubmitEditing={() => { console.log('successfully signed up!') }}
-                            style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 50, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 20 }}
+                            style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 49, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 18 }}
                             onChange={event => this.handleChange(event)}
                             value={this.state.name}
                             placeholder="School"
