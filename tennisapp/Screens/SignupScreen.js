@@ -117,7 +117,7 @@ export default class SignupScreen extends React.Component {
                             placeholder="School"
                         />
                         <TouchableOpacity
-                            onPress={() => console.log('Signed up! Redirect to new page ' + this.state.school)}
+                            onPress={() => console.log('Signed up! Redirect to new page ')}
                             style={{ width: '100%', marginTop: 30, backgroundColor: 'black', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 5, borderWidth: 2, borderColor: '#059' }}>
                             <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Sign up</Text>
                         </TouchableOpacity>
