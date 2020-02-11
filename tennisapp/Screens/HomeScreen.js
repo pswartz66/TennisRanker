@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from 'react-native';
 
-export default function HomeScreen ( { navigation }) {
+export default function HomeScreen ({ navigation }) {
 
         return (
             <View style={styles.homeView}>
