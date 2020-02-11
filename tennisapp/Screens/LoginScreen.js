@@ -6,16 +6,9 @@ export default class LoginScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: ''
+            username: '',
+            password: '',
         };
-        this.handleChange = this.handleChange.bind(this);
-    };
-
-    handleChange = (event) => {
-        const value = event.target.value;
-        this.setState({
-            name: value
-        });
     };
 
     render() {
@@ -33,8 +26,9 @@ export default class LoginScreen extends React.Component {
                         keyboardAppearance={'dark'}
                         onSubmitEditing={() => { this.secondTextInput.focus(); }}
                         style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 49, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 18 }}
-                        onChange={event => this.handleChange(event)}
-                        value={this.state.name}
+                        onChangeText={(text) => this.setState({username: text})}
+                        value={this.state.text}
+                        name='username'
                         placeholder="Username"
                     />
                     <TextInput
@@ -42,8 +36,9 @@ export default class LoginScreen extends React.Component {
                         keyboardAppearance={'dark'}
                         ref={(input) => { this.secondTextInput = input; }}
                         style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 49, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 18 }}
-                        onChange={event => this.handleChange(event)}
-                        value={this.state.name}
+                        onChangeText={(text) => this.setState({password: text})}
+                        value={this.state.text}
+                        name='password'
                         placeholder="Password"
                     />
                     <TouchableOpacity

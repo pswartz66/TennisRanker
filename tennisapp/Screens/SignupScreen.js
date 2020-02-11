@@ -6,10 +6,13 @@ export default class SignupScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
+            firstName: '',
+            lastName: '',
+            username: '',
+            password: '',
+            school: '',
             keyboardVisible: 'false'
         };
-        this.handleChange = this.handleChange.bind(this);
     };
 
     componentDidMount() {
@@ -43,13 +46,6 @@ export default class SignupScreen extends React.Component {
         );
     }
 
-    handleChange = (event) => {
-        const value = event.target.value;
-        this.setState({
-            name: value
-        });
-    };
-
     render() {
 
         return (
@@ -71,8 +67,9 @@ export default class SignupScreen extends React.Component {
                             keyboardAppearance={'dark'}
                             onSubmitEditing={() => { this.secondTextInput.focus(); }}
                             style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 49, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 18 }}
-                            onChange={event => this.handleChange(event)}
-                            value={this.state.name}
+                            onChangeText={(text) => this.setState({firstName: text})}
+                            value={this.state.text}
+                            name='firstName'
                             placeholder="First name"
                         />
                         <TextInput
@@ -81,8 +78,9 @@ export default class SignupScreen extends React.Component {
                             ref={(input) => { this.secondTextInput = input; }}
                             onSubmitEditing={() => { this.thirdTextInput.focus(); }}
                             style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 49, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 18 }}
-                            onChange={event => this.handleChange(event)}
-                            value={this.state.name}
+                            onChangeText={(text) => this.setState({lastName: text})}
+                            value={this.state.text}
+                            name='lastName'
                             placeholder="Last name"
                         />
                         <TextInput
@@ -91,8 +89,9 @@ export default class SignupScreen extends React.Component {
                             ref={(input) => { this.thirdTextInput = input; }}
                             onSubmitEditing={() => { this.fourthTextInput.focus(); }}
                             style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 49, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 18 }}
-                            onChange={event => this.handleChange(event)}
-                            value={this.state.name}
+                            onChangeText={(text) => this.setState({username: text})}
+                            value={this.state.text}
+                            name='username'
                             placeholder="Username"
                         />
                         <TextInput
@@ -101,8 +100,9 @@ export default class SignupScreen extends React.Component {
                             ref={(input) => { this.fourthTextInput = input; }}
                             onSubmitEditing={() => { this.fifthTextInput.focus(); }}
                             style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 49, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 18 }}
-                            onChange={event => this.handleChange(event)}
-                            value={this.state.name}
+                            onChangeText={(text) => this.setState({password: text})}
+                            value={this.state.text}
+                            name='password'
                             placeholder="Password"
                         />
                         <TextInput
@@ -111,12 +111,13 @@ export default class SignupScreen extends React.Component {
                             ref={(input) => { this.fifthTextInput = input; }}
                             onSubmitEditing={() => { console.log('successfully signed up!') }}
                             style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 49, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 18 }}
-                            onChange={event => this.handleChange(event)}
-                            value={this.state.name}
+                            onChangeText={(text) => this.setState({school: text})}
+                            value={this.state.text}
+                            name='school'
                             placeholder="School"
                         />
                         <TouchableOpacity
-                            onPress={() => console.log('Signed up! Redirect to new page')}
+                            onPress={() => console.log('Signed up! Redirect to new page ' + this.state.school)}
                             style={{ width: '100%', marginTop: 30, backgroundColor: 'black', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 5, borderWidth: 2, borderColor: '#059' }}>
                             <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Sign up</Text>
                         </TouchableOpacity>
