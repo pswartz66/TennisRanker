@@ -1,11 +1,16 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Stitch, AnonymousCredential, RemoteMongoClient } from "mongodb-stitch-browser-sdk";
+import { unstable_renderSubtreeIntoContainer } from 'react-dom';
+
 
 export default class SignupScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            CoachesDB: [],
+            userId: undefined,
             firstName: '',
             lastName: '',
             username: '',
@@ -13,17 +18,24 @@ export default class SignupScreen extends React.Component {
             school: '',
             keyboardVisible: 'false'
         };
+
+        this.createUser = this.createUser.bind(this);
     };
 
     componentDidMount() {
-        // this.keyboardDidShowListener = Keyboard.addListener(
-        //   'keyboardDidShow',
-        //   this._keyboardDidShow,
-        // );
-        // this.keyboardDidHideListener = Keyboard.addListener(
-        //   'keyboardDidHide',
-        //   this._keyboardDidHide,
-        // );
+        // Initialize Stitch App Client
+        this.client = Stitch.initializeDefaultAppClient("tennisrank-bwnbe");
+
+        // Define MongoDB Service Client
+        // Used to log in and communicate with Stitch
+        const mongodb = this.client.getServiceClient(
+            RemoteMongoClient.factory,
+            "mongod-atlas"
+        );
+
+        // Reference CoachesDB
+        this.db = mongodb.db("CoachesDB");
+
     }
 
     componentWillUnmount() {
@@ -39,6 +51,7 @@ export default class SignupScreen extends React.Component {
         alert('Keyboard Hidden');
     }
 
+
     onFnameFocus() {
         this.keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
@@ -46,13 +59,56 @@ export default class SignupScreen extends React.Component {
         );
     }
 
+    // sign up a user with credentials
+    createUser() {
+        // event.preventDefault();
+        // let coaches = {
+        //     firstName: this.state.firstName,
+        //     lastName: this.state.lastName,
+        //     username: this.state.username,
+        //     password: this.state.password,
+        //     school: this.state.school
+        // }
+
+        this.db
+            .collection("CoachInfo")
+            .insertMany({
+
+                // breaking because id is undefined see error in console
+                owner_id: this.client.auth.user.id,
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+                username: this.state.username,
+                password: this.state.password,
+                school: this.state.school
+            })
+            .then(this.displayUsers)
+            .catch(console.error);
+    };
+    displayUsers() {
+        // query the CoachesDB
+        this.db
+            .collection("CoachInfo")
+            .find({})
+            .asArray()
+            .then(CoachesDB => {
+                this.setState({CoachesDB});
+            });
+    }
+    displayCoachesOnLoad() {
+        // Anonymously log in and display comments on load
+        this.client.auth
+          .loginWithCredential(new AnonymousCredential())
+          .then(this.displayUsers)
+          .catch(err => {
+          console.log(`Failed to log in anonymously: ${err}`);
+          this.setState({ currentUserId: undefined });
+        });
+      }
+
     render() {
-
         return (
-
-
             <View style={styles.signupView}>
-
                 <View style={styles.signupTopContainer}>
                     <Text style={styles.signupTopContainerText}>
                         Sign up for Rank it
@@ -117,7 +173,7 @@ export default class SignupScreen extends React.Component {
                             placeholder="School"
                         />
                         <TouchableOpacity
-                            onPress={() => console.log('Signed up! Redirect to new page ')}
+                            onPress={() => this.createUser()}
                             style={{ width: '100%', marginTop: 30, backgroundColor: 'black', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 5, borderWidth: 2, borderColor: '#059' }}>
                             <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Sign up</Text>
                         </TouchableOpacity>

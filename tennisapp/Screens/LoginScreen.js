@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
+
 export default class LoginScreen extends React.Component {
     constructor(props) {
         super(props);
