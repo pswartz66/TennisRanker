@@ -1,4 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 
-// This page will allow the user to add a new player with their existing win/loss record
+export default class AddData extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            username: '',
+            password: '',
+        };
+    };
+
+    render() {
+        return (
+            <View>
+                <Text>Add Data page! For adding a new player?</Text>
+            </View>
+        )
+    }
+}
