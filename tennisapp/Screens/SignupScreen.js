@@ -26,22 +26,17 @@ export default class SignupScreen extends React.Component {
         // Initialize Stitch App Client
         Stitch.initializeDefaultAppClient("tennisranker-ioeff").then(client => {
             this.setState({ client })
-            console.log(client)
             if (client.auth.isLoggedIn) {
                 this.setState({ coachID: client.auth.user.id })
             }
-
-
             // Define MongoDB Service Client
             // Used to log in and communicate with Stitch
             const mongodb = client.getServiceClient(
                 RemoteMongoClient.factory,
-                "mongod-atlas"
+                "mongodb-atlas"
             );
-
             // Reference CoachesDB
             this.setState({ db: mongodb.db("tennisranker") });
-
         })
     }
 
@@ -71,7 +66,7 @@ export default class SignupScreen extends React.Component {
     loginNewCoach() {
         this.state.client.auth
             .loginWithCredential(new AnonymousCredential())
-            .then((result) => this.setState({ coachID: result.id}))
+            .then((result) => this.setState({ coachID: result.id }))
             .then(() => this.createCoach())
             .catch(err => {
                 console.log(`Failed to log in anonymously: ${err}`);
@@ -80,11 +75,10 @@ export default class SignupScreen extends React.Component {
     // Then Create user:
 
     createCoach() {
-        console.log(this.state.db)
         this.state.db
             .collection("userinfo")
             .insertOne({
-                // breaking because id is undefined see error in console
+                owner_id: this.state.coachID,
                 coachID: this.state.coachID,
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
@@ -92,19 +86,20 @@ export default class SignupScreen extends React.Component {
                 password: this.state.password,
                 school: this.state.school
             })
-            .then(() => this.displayUsers())
+            //What we want to happen here is redirect. We can then display the info once we redirect.
+            .then((res) => this.props.navigation.navigate('ViewPlayers'))
             .catch(console.error);
     };
-    displayUsers() {
-        // query the CoachesDB
-        console.log('Display users')
-        this.state.db
-            .collection("playerinfo")
-            .find({})
-            .then(db => {
-                this.setState({ db });
-            });
-    }
+    // displayUsers() {
+    //     // query the CoachesDB
+    //     console.log('Display users')
+    //     this.state.db
+    //         .collection("playerinfo")
+    //         .find({})
+    //         .then(db => {
+    //             this.setState({ db });
+    //         });
+    // }
 
     render() {
         return (
