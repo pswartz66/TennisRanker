@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { Stitch, AnonymousCredential, RemoteMongoClient } from "mongodb-stitch-react-native-sdk";
+import { Stitch, UserPasswordAuthProviderClient, RemoteMongoClient } from "mongodb-stitch-react-native-sdk";
 import { unstable_renderSubtreeIntoContainer } from 'react-dom';
 
 
@@ -13,6 +13,7 @@ export default class SignupScreen extends React.Component {
             coachID: undefined,
             client: undefined,
             db: undefined,
+            email: '',
             firstName: '',
             lastName: '',
             username: '',
@@ -62,18 +63,18 @@ export default class SignupScreen extends React.Component {
     }
 
     // sign up a user with credentials
-    // Login:
-    loginNewCoach() {
-        this.state.client.auth
-            .loginWithCredential(new AnonymousCredential())
-            .then((result) => this.setState({ coachID: result.id }))
-            .then(() => this.createCoach())
-            .catch(err => {
-                console.log(`Failed to log in anonymously: ${err}`);
-            });
-    }
-    // Then Create user:
+    // Change this to not login, but create the new user credentials:
+    createNewCredentials() {
+        const emailPasswordClient = Stitch.defaultAppClient.auth
+            .getProviderClient(UserPasswordAuthProviderClient.factory);
 
+        emailPasswordClient.registerWithEmail(this.state.email, this.state.password)
+            .then(() => console.log("Successfully sent account confirmation email!"))
+            .then(() => this.createCoach())
+            .catch(err => console.error("Error registering new user:", err));
+    }
+
+    // Then Create Coach:
     createCoach() {
         this.state.db
             .collection("userinfo")
@@ -90,16 +91,6 @@ export default class SignupScreen extends React.Component {
             .then((res) => this.props.navigation.navigate('ViewPlayers'))
             .catch(console.error);
     };
-    // displayUsers() {
-    //     // query the CoachesDB
-    //     console.log('Display users')
-    //     this.state.db
-    //         .collection("playerinfo")
-    //         .find({})
-    //         .then(db => {
-    //             this.setState({ db });
-    //         });
-    // }
 
     render() {
         return (
@@ -148,6 +139,17 @@ export default class SignupScreen extends React.Component {
                         <TextInput
                             keyboardType={'default'}
                             keyboardAppearance={'dark'}
+                            ref={(input) => { this.thirdTextInput = input; }}
+                            onSubmitEditing={() => { this.fourthTextInput.focus(); }}
+                            style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 49, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 18 }}
+                            onChangeText={(text) => this.setState({ email: text })}
+                            value={this.state.text}
+                            name='email'
+                            placeholder="Email address"
+                        />
+                        <TextInput
+                            keyboardType={'default'}
+                            keyboardAppearance={'dark'}
                             ref={(input) => { this.fourthTextInput = input; }}
                             onSubmitEditing={() => { this.fifthTextInput.focus(); }}
                             style={{ backgroundColor: 'white', textAlign: 'center', margin: 12, height: 49, width: 220, borderWidth: 1, borderRadius: 5, fontSize: 18 }}
@@ -168,7 +170,7 @@ export default class SignupScreen extends React.Component {
                             placeholder="School"
                         />
                         <TouchableOpacity
-                            onPress={() => this.loginNewCoach()}
+                            onPress={() => this.createNewCredentials()}
                             style={{ width: '100%', marginTop: 30, backgroundColor: 'black', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 5, borderWidth: 2, borderColor: '#059' }}>
                             <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Sign up</Text>
                         </TouchableOpacity>
