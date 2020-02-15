@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { Stitch, UserPasswordAuthProviderClient, RemoteMongoClient } from "mongodb-stitch-react-native-sdk";
+import { Stitch, UserPasswordAuthProviderClient, RemoteMongoClient, UserPasswordCredential } from "mongodb-stitch-react-native-sdk";
 import { unstable_renderSubtreeIntoContainer } from 'react-dom';
 
 
@@ -69,18 +69,35 @@ export default class SignupScreen extends React.Component {
             .getProviderClient(UserPasswordAuthProviderClient.factory);
 
         emailPasswordClient.registerWithEmail(this.state.email, this.state.password)
-            .then(() => console.log("Successfully sent account confirmation email!"))
-            .then(() => this.createCoach())
+            .then(() => this.loginCoach())
             .catch(err => console.error("Error registering new user:", err));
+    }
+
+    // Login user:
+    loginCoach() {
+        const app = Stitch.defaultAppClient
+        const credential = new UserPasswordCredential(this.state.email, this.state.password)
+        app.auth.loginWithCredential(credential)
+            .then(authedUser => {
+                this.setState({owner_id: authedUser.id, coachID: authedUser.id})
+                console.log(`successfully logged in with id: ${authedUser.id}`)
+                this.createCoach()
+            })
+            .catch(err => {
+                this.setState({error: true})
+                console.error(`login failed with error: ${err}`)
+            })
     }
 
     // Then Create Coach:
     createCoach() {
+        console.log('in create coach')
         this.state.db
             .collection("userinfo")
             .insertOne({
                 owner_id: this.state.coachID,
                 coachID: this.state.coachID,
+                email: this.state.email,
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
                 username: this.state.username,
@@ -88,7 +105,7 @@ export default class SignupScreen extends React.Component {
                 school: this.state.school
             })
             //What we want to happen here is redirect. We can then display the info once we redirect.
-            .then((res) => this.props.navigation.navigate('ViewPlayers'))
+            .then(() => this.props.navigation.navigate('ViewPlayers'))
             .catch(console.error);
     };
 
