@@ -26,7 +26,7 @@ export default class LoginScreen extends React.Component {
         app.auth.loginWithCredential(credential)
             .then(authedUser => {
                 console.log(`successfully logged in with id: ${authedUser.id}`)
-                this.props.navigation.navigate('ViewPlayers')
+                this.props.navigation.navigate('ViewPlayers', {email: this.state.email, password: this.state.password, coachID: authedUser.id, app})
             })
             .catch(err => {
                 this.setState({error: true})

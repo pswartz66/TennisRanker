@@ -91,7 +91,6 @@ export default class SignupScreen extends React.Component {
 
     // Then Create Coach:
     createCoach() {
-        console.log('in create coach')
         this.state.db
             .collection("userinfo")
             .insertOne({
