@@ -10,6 +10,7 @@ export default class ViewPlayers extends React.Component {
         this.state = {
             coachID: '',
             password: '',
+            players: []
         };
     };
 
@@ -18,8 +19,7 @@ export default class ViewPlayers extends React.Component {
     componentDidMount() {
         this.setState({
             coachID: this.props.route.params.coachID,
-            password: this.props.route.params.password,
-            players: undefined
+            password: this.props.route.params.password
         })
 
         this.findPlayers()
@@ -41,9 +41,19 @@ export default class ViewPlayers extends React.Component {
     }
 
     render() {
-        console.log(this.state.players)
         // Add map function to display all players:
-        if (this.state.players) {
+        if (this.state.players.length === 0) {
+            return (
+                <View style={styles.viewContainer}>
+                    <Text style={styles.textStyle}>You need to add some players!</Text>
+                    <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('AddData')}
+                        style={{ width: 260, marginTop: 30, backgroundColor: 'black', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 5, borderWidth: 2, borderColor: '#0959' }}>
+                        <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Click to add players!</Text>
+                    </TouchableOpacity>
+                </View>
+            )
+        } else {
             return (
                 <View style={styles.viewContainer}>
                     <Text style={styles.textStyle}>Players found!</Text>
@@ -51,12 +61,6 @@ export default class ViewPlayers extends React.Component {
                     <Text style={styles.textStyle}> Wins: {this.state.players[0].wins} </Text>
                     <Text style={styles.textStyle}> Losses: {this.state.players[0].losses} </Text>
                     <Text style={styles.textStyle}> School: {this.state.players[0].school} </Text>
-                </View>
-            )
-        } else {
-            return (
-                <View style={styles.viewContainer}>
-                    <Text style={styles.textStyle}>You need to add some players!</Text>
                 </View>
             )
         }
