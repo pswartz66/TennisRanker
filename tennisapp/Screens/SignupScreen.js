@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Stitch, UserPasswordAuthProviderClient, RemoteMongoClient, UserPasswordCredential } from "mongodb-stitch-react-native-sdk";
 import { unstable_renderSubtreeIntoContainer } from 'react-dom';
 
@@ -116,9 +116,9 @@ export default class SignupScreen extends React.Component {
                         Sign up for Rank it
                     </Text>
                 </View>
+                <ScrollView>
 
                 <View style={styles.signupView}>
-                    <KeyboardAwareScrollView>
                         <TextInput
                             autoFocus={true}
                             keyboardType={'default'}
@@ -190,9 +190,10 @@ export default class SignupScreen extends React.Component {
                             style={{ width: '100%', marginTop: 30, backgroundColor: 'black', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 5, borderWidth: 2, borderColor: '#059' }}>
                             <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Sign up</Text>
                         </TouchableOpacity>
-                    </KeyboardAwareScrollView>
 
                 </View>
+                </ScrollView>
+
 
             </View>
 
