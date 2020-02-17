@@ -80,7 +80,7 @@ export default class SignupScreen extends React.Component {
         app.auth.loginWithCredential(credential)
             .then(authedUser => {
                 this.setState({owner_id: authedUser.id, coachID: authedUser.id})
-                console.log(`successfully logged in with id: ${authedUser.id}`)
+                console.log(`successfully signed up with id: ${authedUser.id}`)
                 this.createCoach(app)
             })
             .catch(err => {
@@ -104,7 +104,11 @@ export default class SignupScreen extends React.Component {
                 school: this.state.school
             })
             //What we want to happen here is redirect. We can then display the info once we redirect.
-            .then(() => this.props.navigation.navigate('ViewPlayers',{email: this.state.email, password: this.state.password, coachID: this.state.coachID, app}))
+            .then(() => this.props.navigation.navigate('ViewPlayers',
+                    {email: this.state.email, 
+                     password: this.state.password, 
+                     coachID: this.state.coachID, 
+                     app}))
             .catch(console.error);
     };
 

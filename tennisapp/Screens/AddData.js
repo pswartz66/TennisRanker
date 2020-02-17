@@ -1,5 +1,5 @@
 import React from 'react';
-import { RemoteMongoClient } from "mongodb-stitch-browser-sdk";
+import { Stitch, RemoteMongoClient } from "mongodb-stitch-browser-sdk";
 import { StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 // import { Header } from 'react-native-elements';
 import NumericInput from 'react-native-numeric-input';
@@ -12,31 +12,43 @@ export default class AddData extends React.Component {
             username: '',
             playerName: '',
             wins: '',
-            losses: ''
+            losses: '',
+            coachID: ''
         };
     };
 
-    // componentDidMount() {
-    //     this.setState({
-    //         username: this.props.route.params.username,
-    //     })
-    //     this.getUsername();
-    // }
+    componentDidMount() {
+        this.setState({
+            coachID: this.props.route.params.coachID,
+        })
 
-    // // get user:
-    // getUsername() {
-    //     const app = this.props.route.params.app;
-    //     const mongodb = app.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
-    //     const usersCollection = mongodb.db("tennisranker").collection("userinfo");
-    //     const query = { 'username': this.props.route.params.username };
-    //     // const options = { "sort": { "name": -1 }, };
+        // console.log(this.props.route.params.coachID);
 
-    //     usersCollection.find(query).toArray()
-    //         .then(userObj => {
-    //             this.setState({ username: userObj.username })
-    //         })
-    //         .catch(err => console.error(`Failed to find documents: ${err}`))
-    // }
+    }
+
+
+    addPlayer() {
+        // const app = Stitch.defaultAppClient
+        const app = this.props.route.params.app;
+        const mongodb = app.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        const playersCollection = mongodb.db("tennisranker").collection("playerinfo");
+
+        // insert player into database
+        playersCollection
+            .insertOne({
+                owner_id: this.state.coachID,
+                coachID: this.state.coachID,
+                name: this.state.playerName,
+                wins: this.state.wins,
+                losses: this.state.losses
+            })
+
+            // then navigate to main screen of all players
+            .then(() => this.props.navigation.navigate('ViewPlayers'))
+            .catch(console.error);
+
+    }
+
 
     render() {
         return (
@@ -103,7 +115,8 @@ export default class AddData extends React.Component {
                             // records.
                             // check this link:
                             // https://react-native-elements.github.io/react-native-elements/docs/0.19.1/card.html
-                            onPress={() => console.log(`Player: ${this.state.playerName} \nRecord: ${this.state.wins} - ${this.state.losses}`)}
+                            // onPress={() => console.log(`Player: ${this.state.playerName} \nRecord: ${this.state.wins} - ${this.state.losses}`)}
+                            onPress={() => this.addPlayer()}
                             style={{ width: 220, marginTop: 30, backgroundColor: 'blue', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 5 }}>
                             <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Add player</Text>
                         </TouchableOpacity>
