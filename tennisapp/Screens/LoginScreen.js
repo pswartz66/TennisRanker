@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { Stitch, UserPasswordCredential } from "mongodb-stitch-react-native-sdk";
-import { withNavigation } from 'react-navigation';
 
 
 export default class LoginScreen extends React.Component {
@@ -10,26 +9,54 @@ export default class LoginScreen extends React.Component {
         this.state = {
             email: '',
             password: '',
+            coachID: undefined,
+            client: undefined,
+            db: undefined,
             error: false
         };
     };
 
     componentDidMount() {
         // Initialize Stitch App Client
-        Stitch.initializeDefaultAppClient("tennisranker-ioeff").then(client => console.log('Initialized'))
+        // Stitch.initializeDefaultAppClient("tennisranker-ioeff").then(client => console.log('Initialized'))
+        // Initialize Stitch App Client
+        Stitch.initializeDefaultAppClient("tennisranker-ioeff").then(client => {
+            this.setState({ client })
+            if (client.auth.isLoggedIn) {
+                this.setState({ coachID: client.auth.user.id })
+            }
+            // Define MongoDB Service Client
+            // Used to log in and communicate with Stitch
+            const mongodb = client.getServiceClient(
+                RemoteMongoClient.factory,
+                "mongodb-atlas"
+            );
+            // Reference CoachesDB
+            this.setState({ db: mongodb.db("tennisranker") });
+        })
+
+
     }
 
-    //Login function: 
+    //Login function:
     onLogin() {
         const app = Stitch.defaultAppClient
         const credential = new UserPasswordCredential(this.state.email, this.state.password)
         app.auth.loginWithCredential(credential)
             .then(authedUser => {
+                this.setState({ owner_id: authedUser.id, coachID: authedUser.id }) 
                 console.log(`successfully logged in with id: ${authedUser.id}`)
-                this.props.navigation.navigate('ViewPlayers', {email: this.state.email, password: this.state.password, coachID: authedUser.id, app})
+                this.props.navigation.navigate('AddData',
+                    {
+                        email: this.state.email,
+                        password: this.state.password,
+                        coachID: this.state.coachID,
+                        app,
+                        db: this.state.db
+                    })
             })
             .catch(err => {
-                this.setState({error: true})
+                this.setState({ error: true })
                 console.error(`login failed with error: ${err}`)
             })
     }
