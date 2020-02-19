@@ -13,17 +13,16 @@ export default class AddData extends React.Component {
             playerName: '',
             wins: '',
             losses: '',
-            coachID: ''
+            coachID: '',
+            password: '',
         };
     };
 
     componentDidMount() {
         this.setState({
             coachID: this.props.route.params.coachID,
+            password: this.props.route.params.password
         })
-
-        // console.log(this.props.route.params.coachID);
-
     }
 
 
@@ -44,7 +43,12 @@ export default class AddData extends React.Component {
             })
 
             // then navigate to main screen of all players
-            .then(() => this.props.navigation.navigate('ViewPlayers'))
+            .then(() => this.props.navigation.navigate('ViewPlayers',
+            {
+                password: this.state.password,
+                coachID: this.state.coachID,
+                app
+            }))
             .catch(console.error);
 
     }
