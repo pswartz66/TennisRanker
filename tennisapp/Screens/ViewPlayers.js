@@ -41,7 +41,6 @@ export default class ViewPlayers extends React.Component {
     }
 
     render() {
-        // Add map function to display all players:
         if (this.state.players.length === 0) {
             return (
                 <View style={styles.viewContainer}>
@@ -57,25 +56,36 @@ export default class ViewPlayers extends React.Component {
             return (
                 <View style={styles.viewContainer}>
                     <Text style={styles.textStyle}>Players found!</Text>
-                    <Text style={styles.textStyle}>{this.state.players[0].name} </Text>
-                    <Text style={styles.textStyle}> Wins: {this.state.players[0].wins} </Text>
-                    <Text style={styles.textStyle}> Losses: {this.state.players[0].losses} </Text>
-                    <Text style={styles.textStyle}> School: {this.state.players[0].school} </Text>
+                    {this.state.players.map(player => {
+                        return (
+                            <>
+                                <Text key={'playerName'}>Name</Text>
+                                <Text key={player.name} style={styles.textStyle}>{player.name}</Text>
+                                <Text key={'playerWins'}>Wins</Text>
+                                <Text key={player.wins} style={styles.textStyle}> Wins: {player.wins} </Text>
+                                <Text key={'playerLosses'}>Losses</Text>
+                                <Text key={player.losses} style={styles.textStyle}> Losses: {player.losses} </Text>
+                                <Text key={'playerSchool'}>School</Text>
+                                <Text key={player.school} style={styles.textStyle}> School: {player.school} </Text>
+                            </>
+                        )
+                    })
+                    }
                 </View>
             )
         }
     }
 };
 
-    const styles = StyleSheet.create({
-        viewContainer: {
-            flex: 1,
-            width: '100%',
-            backgroundColor: 'grey',
-            alignItems: 'center',
-            justifyContent: 'center'
-        },
-        textStyle: {
-            color: 'white',
-        } 
-    });
+const styles = StyleSheet.create({
+    viewContainer: {
+        flex: 1,
+        width: '100%',
+        backgroundColor: 'grey',
+        alignItems: 'center',
+        justifyContent: 'center'
+    }, 
+    textStyle: {
+        color: 'white',
+    }
+});

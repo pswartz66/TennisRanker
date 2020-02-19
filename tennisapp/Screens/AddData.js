@@ -11,8 +11,8 @@ export default class AddData extends React.Component {
         this.state = {
             username: '',
             playerName: '',
-            wins: '',
-            losses: '',
+            wins: '0',
+            losses: '0',
             coachID: '',
             password: '',
         };
