@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { Stitch, UserPasswordCredential } from "mongodb-stitch-react-native-sdk";
+import { Stitch, UserPasswordCredential, RemoteMongoClient } from "mongodb-stitch-react-native-sdk";
 
 
 export default class LoginScreen extends React.Component {
