@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from 'react-native';
-import { Stitch, RemoteMongoClient, BSON } from "mongodb-stitch-browser-sdk";
+import { Item, StyleSheet, Text, View, ImageBackground, TouchableOpacity, FlatList, SafeAreaView } from 'react-native';
+import { Stitch, RemoteMongoClient, BSON } from "mongodb-stitch-react-native-sdk";
+import { ListItem } from 'react-native-elements'
 
 // This page will show a list of all players and will allow the user to select a player to edit and will redirect to the ViewPlayer page.
 // I think the user should be redirected here once they login.
@@ -24,6 +25,20 @@ export default class ViewPlayers extends React.Component {
 
         this.findPlayers()
     }
+
+    // Cute lil seperator for the list of wins and losses:
+    renderSeparator = () => {
+        return (
+            <View
+                style={{
+                    height: 1,
+                    width: "86%",
+                    backgroundColor: "#CED0CE",
+                    marginLeft: "14%"
+                }}
+            />
+        );
+    };
 
     // Find players:
     findPlayers() {
@@ -53,38 +68,55 @@ export default class ViewPlayers extends React.Component {
                 </View>
             )
         } else {
+            console.log(this.state.players);
             return (
-                <View style={styles.viewContainer}>
-                    <Text style={styles.textStyle}>Players found!</Text>
-                    {this.state.players.map(player => {
-                        return (
+                <SafeAreaView style={styles.container}>
+                    <FlatList
+                        data={this.state.players}
+                        renderItem={({ item }) => (
                             <>
-                                <Text key={'playerName'}>Name</Text>
-                                <Text key={player.name} style={styles.textStyle}>{player.name}</Text>
-                                <Text key={'playerWins'}>Wins</Text>
-                                <Text key={player.wins} style={styles.textStyle}> Wins: {player.wins} </Text>
-                                <Text key={'playerLosses'}>Losses</Text>
-                                <Text key={player.losses} style={styles.textStyle}> Losses: {player.losses} </Text>
-                                <Text key={'playerSchool'}>School</Text>
-                                <Text key={player.school} style={styles.textStyle}> School: {player.school} </Text>
+                                <ListItem style={styles.listItem}
+                                title={
+                                    <View>
+                                        <Text>
+                                            Player: {`${item.name}`}
+                                        </Text>
+                                    </View>
+                                } 
+                                subtitle={
+                                    <View>
+                                        <Text>Wins: {`${item.wins}`}</Text>
+                                        <Text>Losses: {`${item.losses}`}</Text>
+                                    </View>
+                                } 
+                                key={item.name} 
+                                 />
                             </>
-                        )
-                    })
-                    }
-                </View>
+                        )}
+                        ItemSeparatorComponent={this.renderSeparator}
+                        keyExtractor={item => item.id}
+                    />
+                </SafeAreaView>
             )
         }
     }
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        marginTop: 1,
+    },
+    listItem : {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     viewContainer: {
         flex: 1,
         width: '100%',
-        backgroundColor: 'grey',
         alignItems: 'center',
         justifyContent: 'center'
-    }, 
+    },
     textStyle: {
         color: 'white',
     }
