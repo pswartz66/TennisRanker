@@ -47,6 +47,7 @@ export default class AddData extends React.Component {
             {
                 password: this.state.password,
                 coachID: this.state.coachID,
+                name: this.state.playerName,
                 app
             }))
             .catch(console.error);
