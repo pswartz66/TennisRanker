@@ -1,7 +1,9 @@
 import React from 'react';
 import { Item, StyleSheet, Text, View, TouchableOpacity, FlatList, SafeAreaView } from 'react-native';
 import { Stitch, RemoteMongoClient, BSON } from "mongodb-stitch-react-native-sdk";
-import { ListItem } from 'react-native-elements'
+import { ListItem, SearchBar } from 'react-native-elements';
+import tennisBall from '../assets/tennisBall.jpeg';
+
 
 // This page will show a list of all players and will allow the user to select a player to edit and will redirect to the ViewPlayer page.
 // I think the user should be redirected here once they login.
@@ -80,6 +82,11 @@ export default class ViewPlayers extends React.Component {
             .catch(err => console.error(`Failed to find documents: ${err}`))
     }
 
+    // Search for a player:
+    renderHeader = () => {
+        return <SearchBar placeholder="Type Here..." lightTheme round />;
+      };
+
     render() {
         if (this.state.players.length === 0) {
             return (
@@ -113,7 +120,8 @@ export default class ViewPlayers extends React.Component {
                         data={this.state.players}
                         renderItem={({ item }) => (
                             <>
-                                <ListItem key={item.id} style={styles.listItem}
+                                <ListItem style={styles.listItem}
+                                    leftAvatar={{ source: tennisBall }}
                                     title={
                                         <View>
                                             <Text style={styles.playerName}>
@@ -125,8 +133,8 @@ export default class ViewPlayers extends React.Component {
                                         <View>
                                             <Text style={styles.wins}>Wins: {`${item.wins}`}</Text>
                                             <Text style={styles.losses}>Losses: {`${item.losses}`}</Text>
-                                            <TouchableOpacity onPress={() => this.editPlayer()} style={styles.editButton}><Text>Edit Player</Text></TouchableOpacity>
-                                            <TouchableOpacity onPress={() => this.deletePlayer()} style={styles.deleteButton}><Text>Delete Player</Text></TouchableOpacity>
+                                            <TouchableOpacity onPress={() => this.editPlayer()} style={styles.editButton}><Text style={styles.textStyle}>Edit Player</Text></TouchableOpacity>
+                                            <TouchableOpacity onPress={() => this.deletePlayer()} style={styles.deleteButton}><Text style={styles.textStyle}>Delete Player</Text></TouchableOpacity>
                                         </View>
                                     }
                                     key={item.name}
@@ -135,6 +143,7 @@ export default class ViewPlayers extends React.Component {
                         )}
                         ItemSeparatorComponent={this.renderSeparator}
                         keyExtractor={item => item.id}
+                        ListHeaderComponent={this.renderHeader}
                     />
                 </SafeAreaView>
             )
@@ -145,26 +154,26 @@ export default class ViewPlayers extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 1,
+        marginTop: 1
     },
     deleteButton: {
-        width: 220, 
-        marginTop: 10, 
-        backgroundColor: 'red', 
-        paddingTop: 10, 
-        paddingRight: 20, 
-        paddingBottom: 10, 
-        paddingLeft: 20, 
-        borderRadius: 5
+        width: 200,
+        marginTop: 10,
+        backgroundColor: 'red',
+        paddingTop: 10,
+        paddingRight: 10,
+        paddingBottom: 10,
+        paddingLeft: 20,
+        borderRadius: 5,
     },
     editButton: {
-        width: 220, 
-        marginTop: 10, 
-        backgroundColor: 'blue', 
-        paddingTop: 10, 
-        paddingRight: 20, 
-        paddingBottom: 10, 
-        paddingLeft: 20, 
+        width: 200,
+        marginTop: 10,
+        backgroundColor: 'blue',
+        paddingTop: 10,
+        paddingRight: 10,
+        paddingBottom: 10,
+        paddingLeft: 20,
         borderRadius: 5,
     },
     listItem: {
@@ -173,17 +182,25 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         marginTop: 5,
         marginBottom: 5,
+        marginLeft: 10,
+        marginRight: 10,
     },
     losses: {
-        fontSize: 20,
+        fontSize: 18,
         marginTop: 10,
+        marginBottom: 5,
     },
     playerName: {
         fontSize: 20,
         marginTop: 10,
+        borderBottomColor: 'grey',
+        borderBottomWidth: 1,
+        marginRight: '15%',
     },
     textStyle: {
-        color: 'grey',
+        color: 'white',
+        textAlign: 'center',
+        fontSize: 18,
     },
     viewContainer: {
         flex: 1,
@@ -192,7 +209,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     wins: {
-        fontSize: 20,
+        fontSize: 18,
         marginTop: 10,
     },
     addPlayersButton: {
