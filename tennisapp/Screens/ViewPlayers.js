@@ -30,19 +30,30 @@ export default class ViewPlayers extends React.Component {
         this.findPlayers()
     }
 
-    deletePlayer() {
+    deletePlayer(pName, pWins, pLosses) {
         console.log('Player deleted. JK.');
 
-        
+        // this.setState({
+        //     name: pName
+        // })
 
         const app = this.props.route.params.app;
         const mongodb = app.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         const playersCollection = mongodb.db("tennisranker").collection("playerinfo");
-        const query = { "coachID": this.props.route.params.coachID, "name": this.props.route.params.name }
-        console.log(query);
-        playersCollection.remove(query).toArray()
-            .then(players => {
-                this.setState({ players });
+        // const query = ({ "coachID": this.props.route.params.coachID}, ({"name": pName });
+        // console.log(query);
+        console.log(pName);
+
+
+        playersCollection.deleteOne(
+            { "coachID": this.props.route.params.coachID },
+            { "name": pName },
+            { "wins": pWins },
+            { "losses": pLosses }
+        )
+            .then(res => {
+                console.log('Player: ' + pName + ' was deleted from db');
+                this.findPlayers();
             })
             .catch(err => console.log(`Did not remove the player document: ${err}`))
 
@@ -120,7 +131,7 @@ export default class ViewPlayers extends React.Component {
                         data={this.state.players}
                         renderItem={({ item }) => (
                             <>
-                                <ListItem style={styles.listItem}
+                                <ListItem key={item.name} style={styles.listItem}
                                     leftAvatar={{ source: tennisBall }}
                                     title={
                                         <View>
@@ -134,7 +145,7 @@ export default class ViewPlayers extends React.Component {
                                             <Text style={styles.wins}>Wins: {`${item.wins}`}</Text>
                                             <Text style={styles.losses}>Losses: {`${item.losses}`}</Text>
                                             <TouchableOpacity onPress={() => this.editPlayer()} style={styles.editButton}><Text style={styles.textStyle}>Edit Player</Text></TouchableOpacity>
-                                            <TouchableOpacity onPress={() => this.deletePlayer()} style={styles.deleteButton}><Text style={styles.textStyle}>Delete Player</Text></TouchableOpacity>
+                                            <TouchableOpacity onPress={() => this.deletePlayer(item.name, item.wins, item.losses)} style={styles.deleteButton}><Text style={styles.textStyle}>Delete Player</Text></TouchableOpacity>
                                         </View>
                                     }
                                     key={item.name}
