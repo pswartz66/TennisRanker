@@ -46,7 +46,7 @@ export default class LoginScreen extends React.Component {
             .then(authedUser => {
                 this.setState({ owner_id: authedUser.id, coachID: authedUser.id }) 
                 console.log(`successfully logged in with id: ${authedUser.id}`)
-                this.props.navigation.navigate('AddData',
+                this.props.navigation.navigate('ViewPlayers',
                     {
                         email: this.state.email,
                         password: this.state.password,

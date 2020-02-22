@@ -1,5 +1,5 @@
 import React from 'react';
-import { Item, StyleSheet, Text, View, ImageBackground, TouchableOpacity, FlatList, SafeAreaView } from 'react-native';
+import { Item, StyleSheet, Text, View, TouchableOpacity, FlatList, SafeAreaView } from 'react-native';
 import { Stitch, RemoteMongoClient, BSON } from "mongodb-stitch-react-native-sdk";
 import { ListItem } from 'react-native-elements'
 
@@ -11,6 +11,7 @@ export default class ViewPlayers extends React.Component {
         this.state = {
             coachID: '',
             password: '',
+            name: '',
             players: []
         };
     };
@@ -20,7 +21,8 @@ export default class ViewPlayers extends React.Component {
     componentDidMount() {
         this.setState({
             coachID: this.props.route.params.coachID,
-            password: this.props.route.params.password
+            password: this.props.route.params.password,
+            name: this.props.route.params.name
         })
 
         this.findPlayers()
@@ -28,6 +30,20 @@ export default class ViewPlayers extends React.Component {
 
     deletePlayer() {
         console.log('Player deleted. JK.');
+
+        
+
+        const app = this.props.route.params.app;
+        const mongodb = app.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+        const playersCollection = mongodb.db("tennisranker").collection("playerinfo");
+        const query = { "coachID": this.props.route.params.coachID, "name": this.props.route.params.name }
+        console.log(query);
+        playersCollection.remove(query).toArray()
+            .then(players => {
+                this.setState({ players });
+            })
+            .catch(err => console.log(`Did not remove the player document: ${err}`))
+
     }
 
     editPlayer() {
@@ -54,7 +70,8 @@ export default class ViewPlayers extends React.Component {
         const mongodb = app.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         const playersCollection = mongodb.db("tennisranker").collection("playerinfo");
         const query = { 'coachID': this.props.route.params.coachID };
-        const options = { "sort": { "name": 1 }, };
+        // sort by greatest number of wins to least number of wins
+        const options = { "sort": { "wins": -1 }, };
 
         playersCollection.find(query, options).toArray()
             .then(players => {
@@ -69,7 +86,11 @@ export default class ViewPlayers extends React.Component {
                 <View style={styles.viewContainer}>
                     <Text style={styles.textStyle}>You need to add some players!</Text>
                     <TouchableOpacity
-                        onPress={() => this.props.navigation.navigate('AddData')}
+                        onPress={() => this.props.navigation.navigate('AddData',{
+                            password: this.state.password,
+                            coachID: this.state.coachID,
+                            name: this.state.playerName
+                        })}
                         style={{ width: 260, marginTop: 30, backgroundColor: 'black', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 5, borderWidth: 2, borderColor: '#0959' }}>
                         <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Click to add players!</Text>
                     </TouchableOpacity>
@@ -78,11 +99,21 @@ export default class ViewPlayers extends React.Component {
         } else {
             return (
                 <SafeAreaView style={styles.container}>
+                    {/* We can remove this later but I needed to be able to quickly
+                    naviagte back and forth between viewplayers and add player */}
+                    <TouchableOpacity 
+                        onPress={() => this.props.navigation.navigate('AddData',
+                        {
+                            coachID: this.props.route.params.coachID
+                        })}
+                        style={styles.addPlayersButton}>
+                        <Text style={styles.addPlayersButtonText}>Add more players</Text>
+                    </TouchableOpacity>
                     <FlatList
                         data={this.state.players}
                         renderItem={({ item }) => (
                             <>
-                                <ListItem style={styles.listItem}
+                                <ListItem key={item.id} style={styles.listItem}
                                     title={
                                         <View>
                                             <Text style={styles.playerName}>
@@ -163,5 +194,18 @@ const styles = StyleSheet.create({
     wins: {
         fontSize: 20,
         marginTop: 10,
+    },
+    addPlayersButton: {
+        alignItems: 'center',
+        height: 60,
+        width: 'auto',
+        margin: 10,
+        paddingTop: 22,
+        backgroundColor: 'black',
+        borderRadius: 6,
+    },
+    addPlayersButtonText: {
+        textAlign: 'center',
+        color: 'white'
     }
 });
