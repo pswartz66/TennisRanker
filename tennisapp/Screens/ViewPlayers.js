@@ -26,15 +26,23 @@ export default class ViewPlayers extends React.Component {
         this.findPlayers()
     }
 
+    deletePlayer() {
+        console.log('Player deleted. JK.');
+    }
+
+    editPlayer() {
+        console.log('Player edited. JK.');
+    }
+
     // Cute lil seperator for the list of wins and losses:
     renderSeparator = () => {
         return (
             <View
                 style={{
                     height: 1,
-                    width: "86%",
                     backgroundColor: "#CED0CE",
-                    marginLeft: "14%"
+                    marginLeft: "15%",
+                    marginRight: '15%'
                 }}
             />
         );
@@ -46,7 +54,7 @@ export default class ViewPlayers extends React.Component {
         const mongodb = app.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         const playersCollection = mongodb.db("tennisranker").collection("playerinfo");
         const query = { 'coachID': this.props.route.params.coachID };
-        const options = { "sort": { "name": -1 }, };
+        const options = { "sort": { "name": 1 }, };
 
         playersCollection.find(query, options).toArray()
             .then(players => {
@@ -68,7 +76,6 @@ export default class ViewPlayers extends React.Component {
                 </View>
             )
         } else {
-            console.log(this.state.players);
             return (
                 <SafeAreaView style={styles.container}>
                     <FlatList
@@ -76,21 +83,23 @@ export default class ViewPlayers extends React.Component {
                         renderItem={({ item }) => (
                             <>
                                 <ListItem style={styles.listItem}
-                                title={
-                                    <View>
-                                        <Text>
-                                            Player: {`${item.name}`}
-                                        </Text>
-                                    </View>
-                                } 
-                                subtitle={
-                                    <View>
-                                        <Text>Wins: {`${item.wins}`}</Text>
-                                        <Text>Losses: {`${item.losses}`}</Text>
-                                    </View>
-                                } 
-                                key={item.name} 
-                                 />
+                                    title={
+                                        <View>
+                                            <Text style={styles.playerName}>
+                                                Player: {`${item.name}`}
+                                            </Text>
+                                        </View>
+                                    }
+                                    subtitle={
+                                        <View>
+                                            <Text style={styles.wins}>Wins: {`${item.wins}`}</Text>
+                                            <Text style={styles.losses}>Losses: {`${item.losses}`}</Text>
+                                            <TouchableOpacity onPress={() => this.editPlayer()} style={styles.editButton}><Text>Edit Player</Text></TouchableOpacity>
+                                            <TouchableOpacity onPress={() => this.deletePlayer()} style={styles.deleteButton}><Text>Delete Player</Text></TouchableOpacity>
+                                        </View>
+                                    }
+                                    key={item.name}
+                                />
                             </>
                         )}
                         ItemSeparatorComponent={this.renderSeparator}
@@ -107,9 +116,43 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: 1,
     },
-    listItem : {
+    deleteButton: {
+        width: 220, 
+        marginTop: 10, 
+        backgroundColor: 'red', 
+        paddingTop: 10, 
+        paddingRight: 20, 
+        paddingBottom: 10, 
+        paddingLeft: 20, 
+        borderRadius: 5
+    },
+    editButton: {
+        width: 220, 
+        marginTop: 10, 
+        backgroundColor: 'blue', 
+        paddingTop: 10, 
+        paddingRight: 20, 
+        paddingBottom: 10, 
+        paddingLeft: 20, 
+        borderRadius: 5,
+    },
+    listItem: {
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: 'white',
+        marginTop: 5,
+        marginBottom: 5,
+    },
+    losses: {
+        fontSize: 20,
+        marginTop: 10,
+    },
+    playerName: {
+        fontSize: 20,
+        marginTop: 10,
+    },
+    textStyle: {
+        color: 'grey',
     },
     viewContainer: {
         flex: 1,
@@ -117,7 +160,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    textStyle: {
-        color: 'white',
+    wins: {
+        fontSize: 20,
+        marginTop: 10,
     }
 });
