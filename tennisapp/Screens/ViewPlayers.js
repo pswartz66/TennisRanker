@@ -114,7 +114,7 @@ export default class ViewPlayers extends React.Component {
                     naviagte back and forth between viewplayers and add player */}
                     <Spinner
                         visible={this.state.loading}
-                        textContent={''}
+                        textContent={'Deleting player...'}
                         textStyle={styles.spinnerTextStyle}
                     />
                     <TouchableOpacity
