@@ -3,6 +3,7 @@ import { Item, StyleSheet, Text, View, TouchableOpacity, FlatList, SafeAreaView 
 import { Stitch, RemoteMongoClient, BSON } from "mongodb-stitch-react-native-sdk";
 import { ListItem, SearchBar } from 'react-native-elements';
 import tennisBall from '../assets/tennisBall.jpeg';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 // This page will show a list of all players and will allow the user to select a player to edit and will redirect to the ViewPlayer page.
@@ -14,7 +15,8 @@ export default class ViewPlayers extends React.Component {
             coachID: '',
             password: '',
             name: '',
-            players: []
+            players: [],
+            loading: false
         };
     };
 
@@ -26,33 +28,20 @@ export default class ViewPlayers extends React.Component {
             password: this.props.route.params.password,
             name: this.props.route.params.name
         })
-
         this.findPlayers()
     }
 
-    deletePlayer(pName, pWins, pLosses) {
-        console.log('Player deleted. JK.');
-
-        // this.setState({
-        //     name: pName
-        // })
-
+    deletePlayer(id) {
+        this.setState({
+            loading: true
+        })
         const app = this.props.route.params.app;
         const mongodb = app.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         const playersCollection = mongodb.db("tennisranker").collection("playerinfo");
-        // const query = ({ "coachID": this.props.route.params.coachID}, ({"name": pName });
-        // console.log(query);
-        console.log(pName);
-
-
-        playersCollection.deleteOne(
-            { "coachID": this.props.route.params.coachID },
-            { "name": pName },
-            { "wins": pWins },
-            { "losses": pLosses }
-        )
+        const query = { "_id": id };
+        playersCollection.deleteOne(query)
             .then(res => {
-                console.log('Player: ' + pName + ' was deleted from db');
+                console.log(res)
                 this.findPlayers();
             })
             .catch(err => console.log(`Did not remove the player document: ${err}`))
@@ -79,6 +68,7 @@ export default class ViewPlayers extends React.Component {
 
     // Find players:
     findPlayers() {
+        this.setState({ loading: true })
         const app = this.props.route.params.app;
         const mongodb = app.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         const playersCollection = mongodb.db("tennisranker").collection("playerinfo");
@@ -88,7 +78,10 @@ export default class ViewPlayers extends React.Component {
 
         playersCollection.find(query, options).toArray()
             .then(players => {
-                this.setState({ players })
+                this.setState({
+                    players,
+                    loading: false
+                })
             })
             .catch(err => console.error(`Failed to find documents: ${err}`))
     }
@@ -96,7 +89,7 @@ export default class ViewPlayers extends React.Component {
     // Search for a player:
     renderHeader = () => {
         return <SearchBar placeholder="Type Here..." lightTheme round />;
-      };
+    };
 
     render() {
         if (this.state.players.length === 0) {
@@ -104,7 +97,7 @@ export default class ViewPlayers extends React.Component {
                 <View style={styles.viewContainer}>
                     <Text style={styles.textStyle}>You need to add some players!</Text>
                     <TouchableOpacity
-                        onPress={() => this.props.navigation.navigate('AddData',{
+                        onPress={() => this.props.navigation.navigate('AddData', {
                             password: this.state.password,
                             coachID: this.state.coachID,
                             name: this.state.playerName
@@ -119,11 +112,16 @@ export default class ViewPlayers extends React.Component {
                 <SafeAreaView style={styles.container}>
                     {/* We can remove this later but I needed to be able to quickly
                     naviagte back and forth between viewplayers and add player */}
-                    <TouchableOpacity 
+                    <Spinner
+                        visible={this.state.loading}
+                        textContent={''}
+                        textStyle={styles.spinnerTextStyle}
+                    />
+                    <TouchableOpacity
                         onPress={() => this.props.navigation.navigate('AddData',
-                        {
-                            coachID: this.props.route.params.coachID
-                        })}
+                            {
+                                coachID: this.props.route.params.coachID
+                            })}
                         style={styles.addPlayersButton}>
                         <Text style={styles.addPlayersButtonText}>Add more players</Text>
                     </TouchableOpacity>
@@ -131,7 +129,7 @@ export default class ViewPlayers extends React.Component {
                         data={this.state.players}
                         renderItem={({ item }) => (
                             <>
-                                <ListItem key={item.name} style={styles.listItem}
+                                <ListItem key={item._id} style={styles.listItem}
                                     leftAvatar={{ source: tennisBall }}
                                     title={
                                         <View>
@@ -145,7 +143,7 @@ export default class ViewPlayers extends React.Component {
                                             <Text style={styles.wins}>Wins: {`${item.wins}`}</Text>
                                             <Text style={styles.losses}>Losses: {`${item.losses}`}</Text>
                                             <TouchableOpacity onPress={() => this.editPlayer()} style={styles.editButton}><Text style={styles.textStyle}>Edit Player</Text></TouchableOpacity>
-                                            <TouchableOpacity onPress={() => this.deletePlayer(item.name, item.wins, item.losses)} style={styles.deleteButton}><Text style={styles.textStyle}>Delete Player</Text></TouchableOpacity>
+                                            <TouchableOpacity onPress={() => this.deletePlayer(item._id)} style={styles.deleteButton}><Text style={styles.textStyle}>Delete Player</Text></TouchableOpacity>
                                         </View>
                                     }
                                     key={item.name}
