@@ -29,6 +29,7 @@ export default class AddData extends React.Component {
     addPlayer() {
         // const app = Stitch.defaultAppClient
         const app = this.props.route.params.app;
+        console.log(app);
         const mongodb = app.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         const playersCollection = mongodb.db("tennisranker").collection("playerinfo");
 

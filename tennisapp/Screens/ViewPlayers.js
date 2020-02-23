@@ -16,7 +16,8 @@ export default class ViewPlayers extends React.Component {
             password: '',
             name: '',
             players: [],
-            loading: false
+            loading: false,
+            searchQuery: ''
         };
     };
 
@@ -28,7 +29,8 @@ export default class ViewPlayers extends React.Component {
             password: this.props.route.params.password,
             name: this.props.route.params.name
         })
-        this.findPlayers()
+        this.findPlayers();
+        
     }
 
     deletePlayer(id) {
@@ -45,7 +47,6 @@ export default class ViewPlayers extends React.Component {
                 this.findPlayers();
             })
             .catch(err => console.log(`Did not remove the player document: ${err}`))
-
     }
 
     editPlayer() {
@@ -84,11 +85,51 @@ export default class ViewPlayers extends React.Component {
                 })
             })
             .catch(err => console.error(`Failed to find documents: ${err}`))
+
+        }
+
+    // handles the ability to type into the SearchBar
+    updateSearchQuery = searchQuery => {
+        this.setState({ searchQuery });
+    }
+
+    // filter for a player whose name contains 'searchQuery'
+    findFilteredPlayers = () => {
+        const { searchQuery } = this.state;
+        let myRegex = new RegExp(searchQuery);
+        let tempArr = []
+        for (let i = 0; i < this.state.players.length; i++) {
+            if (this.state.players[i].name.match(myRegex)) {
+                tempArr.push(this.state.players[i])
+            }
+        }
+        this.setState({
+            players: tempArr
+        })
+    }
+
+    cancelSearch = () => {
+        console.log('cleared');
+        this.search.clear();
+        this.setState({
+            searchQuery: ''
+        })
     }
 
     // Search for a player:
     renderHeader = () => {
-        return <SearchBar placeholder="Type Here..." lightTheme round />;
+        const { searchQuery } = this.state;
+        return (
+            <SearchBar 
+                ref={search => this.search = search}
+                onChangeText={this.updateSearchQuery}
+                value={searchQuery}
+                onSubmitEditing={this.findFilteredPlayers}
+                onCancel={this.cancelSearch}
+                placeholder="Type Here..." lightTheme round 
+            />
+        );
+
     };
 
     render() {
@@ -100,7 +141,8 @@ export default class ViewPlayers extends React.Component {
                         onPress={() => this.props.navigation.navigate('AddData', {
                             password: this.state.password,
                             coachID: this.state.coachID,
-                            name: this.state.playerName
+                            name: this.state.playerName,
+                            app: this.props.route.params.app
                         })}
                         style={{ width: 260, marginTop: 30, backgroundColor: 'black', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 5, borderWidth: 2, borderColor: '#0959' }}>
                         <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Click to add players!</Text>
@@ -120,7 +162,8 @@ export default class ViewPlayers extends React.Component {
                     <TouchableOpacity
                         onPress={() => this.props.navigation.navigate('AddData',
                             {
-                                coachID: this.props.route.params.coachID
+                                coachID: this.props.route.params.coachID,
+                                app: this.props.route.params.app
                             })}
                         style={styles.addPlayersButton}>
                         <Text style={styles.addPlayersButtonText}>Add more players</Text>
