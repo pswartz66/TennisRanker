@@ -17,7 +17,8 @@ export default class ViewPlayers extends React.Component {
             name: '',
             players: [],
             loading: false,
-            searchQuery: ''
+            searchQuery: '',
+            foundPlayers: [],
         };
     };
 
@@ -104,16 +105,18 @@ export default class ViewPlayers extends React.Component {
             }
         }
         this.setState({
-            players: tempArr
+            //players: tempArr
+            foundPlayers: tempArr
         })
     }
 
     cancelSearch = () => {
         // console.log('cleared');
         this.setState({
-            searchQuery: ''
+            searchQuery: '',
+            foundPlayers: [],
         })
-        this.findPlayers();
+        //this.findPlayers();
     }
 
     // Search for a player:
@@ -150,6 +153,7 @@ export default class ViewPlayers extends React.Component {
                 </View>
             )
         } else {
+            {this.state.foundPlayers.length !== 0 ? this.data= this.state.foundPlayers : this.data= this.state.players}
             return (
                 <SafeAreaView style={styles.container}>
                     {/* We can remove this later but I needed to be able to quickly
@@ -169,7 +173,7 @@ export default class ViewPlayers extends React.Component {
                         <Text style={styles.addPlayersButtonText}>Add more players</Text>
                     </TouchableOpacity>
                     <FlatList
-                        data={this.state.players}
+                        data={this.data}
                         renderItem={({ item }) => (
                             <>
                                 <ListItem key={item._id} style={styles.listItem}
