@@ -109,11 +109,11 @@ export default class ViewPlayers extends React.Component {
     }
 
     cancelSearch = () => {
-        console.log('cleared');
-        this.search.clear();
+        // console.log('cleared');
         this.setState({
             searchQuery: ''
         })
+        this.findPlayers();
     }
 
     // Search for a player:
@@ -125,7 +125,7 @@ export default class ViewPlayers extends React.Component {
                 onChangeText={this.updateSearchQuery}
                 value={searchQuery}
                 onSubmitEditing={this.findFilteredPlayers}
-                onCancel={this.cancelSearch}
+                onClear={this.cancelSearch}
                 placeholder="Type Here..." lightTheme round 
             />
         );
