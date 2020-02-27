@@ -1,9 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
-// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { Stitch, UserPasswordAuthProviderClient, RemoteMongoClient, UserPasswordCredential } from "mongodb-stitch-react-native-sdk";
-import { unstable_renderSubtreeIntoContainer } from 'react-dom';
-
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { UserPasswordAuthProviderClient, UserPasswordCredential } from "mongodb-stitch-react-native-sdk";
 
 export default class SignupScreen extends React.Component {
     constructor(props) {
@@ -11,63 +8,28 @@ export default class SignupScreen extends React.Component {
         this.state = {
             CoachesDB: [],
             coachID: undefined,
-            client: undefined,
-            db: undefined,
             email: '',
             firstName: '',
             lastName: '',
             username: '',
             password: '',
-            school: '',
-            keyboardVisible: 'false'
+            school: ''
         };
     };
 
     componentDidMount() {
-        // Initialize Stitch App Client
-        Stitch.initializeDefaultAppClient("tennisranker-ioeff").then(client => {
-            this.setState({ client })
-            if (client.auth.isLoggedIn) {
-                this.setState({ coachID: client.auth.user.id })
-            }
-            // Define MongoDB Service Client
-            // Used to log in and communicate with Stitch
-            const mongodb = client.getServiceClient(
-                RemoteMongoClient.factory,
-                "mongodb-atlas"
-            );
-            // Reference CoachesDB
-            this.setState({ db: mongodb.db("tennisranker") });
+        const client = this.props.route.params.client;
+        this.setState({ 
+            coachID: client.auth.user.id, 
+            db: this.props.route.params.db
         })
-    }
-
-    componentWillUnmount() {
-        // this.keyboardDidShowListener.remove();
-        // this.keyboardDidHideListener.remove();
-    }
-
-    _keyboardDidShow() {
-        console.log('Keyboard Shown');
-    }
-
-    _keyboardDidHide() {
-        alert('Keyboard Hidden');
-    }
-
-
-    onFnameFocus() {
-        this.keyboardDidShowListener = Keyboard.addListener(
-            'keyboardDidShow',
-            this._keyboardDidShow,
-        );
     }
 
     // sign up a user with credentials
     // Change this to not login, but create the new user credentials:
     createNewCredentials() {
-        const emailPasswordClient = Stitch.defaultAppClient.auth
-            .getProviderClient(UserPasswordAuthProviderClient.factory);
-
+        const app = this.props.route.params.app;
+        const emailPasswordClient = app.auth.getProviderClient(UserPasswordAuthProviderClient.factory);
         emailPasswordClient.registerWithEmail(this.state.email, this.state.password)
             .then(() => this.loginCoach())
             .catch(err => console.error("Error registering new user:", err));
@@ -75,7 +37,7 @@ export default class SignupScreen extends React.Component {
 
     // Login user:
     loginCoach() {
-        const app = Stitch.defaultAppClient
+        const app = this.props.route.params.app;
         const credential = new UserPasswordCredential(this.state.email, this.state.password)
         app.auth.loginWithCredential(credential)
             .then(authedUser => {
