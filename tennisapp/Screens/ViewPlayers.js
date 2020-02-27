@@ -97,7 +97,7 @@ export default class ViewPlayers extends React.Component {
     findFilteredPlayers = () => {
         const { searchQuery } = this.state;
         let myRegex = new RegExp(searchQuery);
-        let tempArr = []
+        let tempArr = [];
         for (let i = 0; i < this.state.players.length; i++) {
             if (this.state.players[i].name.match(myRegex)) {
                 tempArr.push(this.state.players[i])

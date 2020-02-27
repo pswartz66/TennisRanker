@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { Stitch, UserPasswordCredential, RemoteMongoClient } from "mongodb-stitch-react-native-sdk";
-
+import { UserPasswordCredential } from "mongodb-stitch-react-native-sdk";
 
 export default class LoginScreen extends React.Component {
     constructor(props) {
@@ -10,41 +9,24 @@ export default class LoginScreen extends React.Component {
             email: '',
             password: '',
             coachID: undefined,
-            client: undefined,
-            db: undefined,
             error: false
         };
     };
 
     componentDidMount() {
-        // Initialize Stitch App Client
-        // Stitch.initializeDefaultAppClient("tennisranker-ioeff").then(client => console.log('Initialized'))
-        // Initialize Stitch App Client
-        Stitch.initializeDefaultAppClient("tennisranker-ioeff").then(client => {
-            this.setState({ client })
-            if (client.auth.isLoggedIn) {
-                this.setState({ coachID: client.auth.user.id })
-            }
-            // Define MongoDB Service Client
-            // Used to log in and communicate with Stitch
-            const mongodb = client.getServiceClient(
-                RemoteMongoClient.factory,
-                "mongodb-atlas"
-            );
-            // Reference CoachesDB
-            this.setState({ db: mongodb.db("tennisranker") });
-        })
-
-
+        const client = this.props.route.params.client;
+        if (client.auth.isLoggedIn) {
+            this.setState({ coachID: client.auth.user.id })
+        }
     }
 
     //Login function:
     onLogin() {
-        const app = Stitch.defaultAppClient
+        const app = this.props.route.params.app;
         const credential = new UserPasswordCredential(this.state.email, this.state.password)
         app.auth.loginWithCredential(credential)
             .then(authedUser => {
-                this.setState({ owner_id: authedUser.id, coachID: authedUser.id }) 
+                this.setState({ owner_id: authedUser.id, coachID: authedUser.id })
                 console.log(`successfully logged in with id: ${authedUser.id}`)
                 this.props.navigation.navigate('ViewPlayers',
                     {
