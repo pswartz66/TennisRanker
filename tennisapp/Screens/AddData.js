@@ -29,7 +29,6 @@ export default class AddData extends React.Component {
     addPlayer() {
         // const app = Stitch.defaultAppClient
         const app = this.props.route.params.app;
-        console.log(app);
         const mongodb = app.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
         const playersCollection = mongodb.db("tennisranker").collection("playerinfo");
 
@@ -116,12 +115,6 @@ export default class AddData extends React.Component {
                             />
 
                         <TouchableOpacity
-                            // change this to navigate to view all players
-                            // use react-native-elements card to display all players and their
-                            // records.
-                            // check this link:
-                            // https://react-native-elements.github.io/react-native-elements/docs/0.19.1/card.html
-                            // onPress={() => console.log(`Player: ${this.state.playerName} \nRecord: ${this.state.wins} - ${this.state.losses}`)}
                             onPress={() => this.addPlayer()}
                             style={{ width: 220, marginTop: 30, backgroundColor: 'blue', paddingTop: 10, paddingRight: 20, paddingBottom: 10, paddingLeft: 20, borderRadius: 5 }}>
                             <Text style={{ textAlign: 'center', fontSize: 20, color: 'white' }}>Add player</Text>
