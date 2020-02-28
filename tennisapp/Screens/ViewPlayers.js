@@ -31,8 +31,13 @@ export default class ViewPlayers extends React.Component {
             name: this.props.route.params.name
         })
         this.findPlayers();
-        
     }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.route.params.name !== prevProps.route.params.name) {
+          this.findPlayers();
+        }
+      }
 
     deletePlayer(id) {
         this.setState({
@@ -50,8 +55,15 @@ export default class ViewPlayers extends React.Component {
             .catch(err => console.log(`Did not remove the player document: ${err}`))
     }
 
-    editPlayer() {
-        console.log('Player edited. JK.');
+    editPlayer(id) {
+        this.props.navigation.navigate('ViewPlayer',
+            {
+                id,
+                password: this.state.password,
+                coachID: this.state.coachID,
+                name: this.state.playerName,
+                app: this.props.route.params.app,
+            });
     }
 
     // Cute lil seperator for the list of wins and losses:
@@ -105,18 +117,15 @@ export default class ViewPlayers extends React.Component {
             }
         }
         this.setState({
-            //players: tempArr
             foundPlayers: tempArr
         })
     }
 
     cancelSearch = () => {
-        // console.log('cleared');
         this.setState({
             searchQuery: '',
             foundPlayers: [],
         })
-        //this.findPlayers();
     }
 
     // Search for a player:
@@ -160,7 +169,7 @@ export default class ViewPlayers extends React.Component {
                     naviagte back and forth between viewplayers and add player */}
                     <Spinner
                         visible={this.state.loading}
-                        textContent={'Deleting player...'}
+                        textContent={''}
                         textStyle={styles.spinnerTextStyle}
                     />
                     <TouchableOpacity
@@ -189,7 +198,7 @@ export default class ViewPlayers extends React.Component {
                                         <View>
                                             <Text style={styles.wins}>Wins: {`${item.wins}`}</Text>
                                             <Text style={styles.losses}>Losses: {`${item.losses}`}</Text>
-                                            <TouchableOpacity onPress={() => this.editPlayer()} style={styles.editButton}><Text style={styles.textStyle}>Edit Player</Text></TouchableOpacity>
+                                            <TouchableOpacity onPress={() => this.editPlayer(item._id)} style={styles.editButton}><Text style={styles.textStyle}>Edit Player</Text></TouchableOpacity>
                                             <TouchableOpacity onPress={() => this.deletePlayer(item._id)} style={styles.deleteButton}><Text style={styles.textStyle}>Delete Player</Text></TouchableOpacity>
                                         </View>
                                     }
