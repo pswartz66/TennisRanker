@@ -28,7 +28,7 @@ export default class ViewPlayers extends React.Component {
         this.setState({
             coachID: this.props.route.params.coachID,
             password: this.props.route.params.password,
-            name: this.props.route.params.name
+            // name: this.props.route.params.name
         })
         this.findPlayers();
     }
@@ -49,21 +49,26 @@ export default class ViewPlayers extends React.Component {
         const query = { "_id": id };
         playersCollection.deleteOne(query)
             .then(res => {
-                console.log(res)
+                // console.log(res)
                 this.findPlayers();
             })
             .catch(err => console.log(`Did not remove the player document: ${err}`))
     }
 
-    editPlayer(id) {
+    // this function's sole purpose is to navigate to the edit player view
+    // here we'll pass in the id, name, wins, losses for the player that gets clicked
+    // ** important note, ORDER of function params DOES matter when passing to another screen
+    goToEditPlayer(id, name, wins, losses, coachID) {
         this.props.navigation.navigate('ViewPlayer',
             {
                 id,
-                password: this.state.password,
-                coachID: this.state.coachID,
-                name: this.state.playerName,
+                coachID,
+                name,
+                wins,
+                losses,
                 app: this.props.route.params.app,
             });
+        console.log(this.state.playerName);
     }
 
     // Cute lil seperator for the list of wins and losses:
@@ -198,7 +203,7 @@ export default class ViewPlayers extends React.Component {
                                         <View>
                                             <Text style={styles.wins}>Wins: {`${item.wins}`}</Text>
                                             <Text style={styles.losses}>Losses: {`${item.losses}`}</Text>
-                                            <TouchableOpacity onPress={() => this.editPlayer(item._id)} style={styles.editButton}><Text style={styles.textStyle}>Edit Player</Text></TouchableOpacity>
+                                            <TouchableOpacity onPress={() => this.goToEditPlayer(item._id, item.name, item.wins, item.losses, item.coachID)} style={styles.editButton}><Text style={styles.textStyle}>Edit Player</Text></TouchableOpacity>
                                             <TouchableOpacity onPress={() => this.deletePlayer(item._id)} style={styles.deleteButton}><Text style={styles.textStyle}>Delete Player</Text></TouchableOpacity>
                                         </View>
                                     }

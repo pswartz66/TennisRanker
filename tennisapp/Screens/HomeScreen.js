@@ -14,8 +14,6 @@ export default class HomeScreen extends React.Component {
 
     componentDidMount() {
         // Initialize Stitch App Client
-        // Stitch.initializeDefaultAppClient("tennisranker-ioeff").then(client => console.log('Initialized'))
-        // Initialize Stitch App Client
         Stitch.initializeDefaultAppClient("tennisranker-ioeff").then(client => {
             this.setState({ client })
 
