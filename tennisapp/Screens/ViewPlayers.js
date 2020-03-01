@@ -68,7 +68,6 @@ export default class ViewPlayers extends React.Component {
                 losses,
                 app: this.props.route.params.app,
             });
-        console.log(this.state.playerName);
     }
 
     // Cute lil seperator for the list of wins and losses:
