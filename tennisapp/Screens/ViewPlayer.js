@@ -18,7 +18,6 @@ export default class ViewPlayer extends React.Component {
         };
     };
 
-
     componentDidMount() {
         this.setState({
             wins: this.props.route.params.wins,
@@ -81,7 +80,7 @@ export default class ViewPlayer extends React.Component {
                             style={styles.numberInput}
                             initValue={parseInt(this.state.wins)}
                             value={this.state.value}
-                            onChange={value => this.setState({ wins: value })}
+                            onChange={value => this.setState({ wins: parseInt(value) })}
                             onLimitReached={(isMax, msg) => console.log(isMax, msg)}
                             totalWidth={220}
                             totalHeight={60}
@@ -100,7 +99,7 @@ export default class ViewPlayer extends React.Component {
                             style={styles.numberInput}
                             initValue={parseInt(this.state.losses)}
                             value={this.state.value}
-                            onChange={value => this.setState({ losses: value })}
+                            onChange={value => this.setState({ losses: parseInt(value) })}
                             onLimitReached={(isMax, msg) => console.log(isMax, msg)}
                             totalWidth={220}
                             totalHeight={60}

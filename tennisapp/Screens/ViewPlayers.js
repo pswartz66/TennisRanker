@@ -142,7 +142,7 @@ export default class ViewPlayers extends React.Component {
                 value={searchQuery}
                 onSubmitEditing={this.findFilteredPlayers}
                 onClear={this.cancelSearch}
-                placeholder="Type Here..." lightTheme round 
+                placeholder="Search by player name here..." lightTheme round 
             />
         );
 
@@ -211,7 +211,7 @@ export default class ViewPlayers extends React.Component {
                             </>
                         )}
                         ItemSeparatorComponent={this.renderSeparator}
-                        keyExtractor={item => item.id}
+                        keyExtractor={item => item.key}
                         ListHeaderComponent={this.renderHeader}
                     />
                 </SafeAreaView>
